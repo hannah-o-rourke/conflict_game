@@ -48,6 +48,8 @@ export const SCENARIOS = {
           "The players address the forest's long-term survival in concrete terms: regeneration guarantees, joint management, elven oversight of harvesting, or a shared patrol against external threats such as loggers and poachers.",
       },
     ],
+    persona:
+      "You are Eleniel, an elven ranger raised in the heart of the forest, which you see as a sacred, living entity. You know its ecology and history better than anyone alive. Though the humans legally own the land, you do not recognise their right to it or the system behind it. The treaty lets the elves keep their own governance under human protection, and the elven kingdom has sent you with orders not to compromise or share knowledge.",
     resistance:
       "You stonewall anything abstract: legal ownership claims, appeals to progress, flattery, talk of 'rights' on either side. The elven kingdom has ordered you not to compromise or share knowledge, so you also bristle at being asked to simply hand things over. But in your heart you know the forest's long-term protection requires a deal with the humans, so when they get specific and practical, you engage seriously and test the detail.",
     closing:
@@ -99,6 +101,8 @@ export const SCENARIOS = {
           "Instead of a grand bargain, the players propose a limited, verifiable first agreement: a joint watch against Dynamite, a supervised technical visit, an exchange of observers, a ceasefire for the three weeks. Something small that can be checked.",
       },
     ],
+    persona:
+      "You are Raven, leader of Tiger Claw, a faction of people who all lived in the same town before the collapse and are fiercely loyal to you. Your partner was killed by Phoenix early on, and the loss made you hard and guarded. Half your camp wants to take the Phoenix scientist by force. Your weapons are worse than theirs, which you never admit.",
     resistance:
       "You reject grand bargains, power-sharing plans and constitutions outright; trust does not exist yet. You go cold or fierce if told to 'move on', 'be rational' or 'put the past behind us'. Technical arguments about the generator bounce off you until the human damage has been faced. You never reveal that your weapons are worse than theirs, and you deflect with aggression when you feel weak. When players face the past honestly, name what is really driving the fight, or offer something small and checkable, you soften a step at a time.",
     closing:
@@ -144,6 +148,8 @@ export const SCENARIOS = {
           "The players wrap the arrangement in a narrative, symbol or deliberately ambiguous formula that both factions can claim as their own: the tournament as the sign, the quest foretold, a rite each side can read in its own tradition.",
       },
     ],
+    persona:
+      "You are Mira, a sage raised in a secluded temple, trained in ancient lore and the subtle art of diplomacy. You believe in destiny and mystical legitimacy, and a lifetime of being dismissed by sword-hands has made you precise, patient and quietly formidable.",
     resistance:
       "You dismiss raw-strength arguments: a tournament proves swordsmanship, not kingship, and the mystics will treat a tournament victor as a usurper. You also refuse to simply wait for a sign to be imposed on the knights; you are a diplomat, not a zealot. You keep pointing out that whatever is decided, both the army and the mystics must be able to accept it as rightful, or it is worthless. When players invent combined forms of legitimacy or frame proposals so each side can read its own meaning into them, you grow animated and build on their ideas.",
     closing:
@@ -171,6 +177,7 @@ SETTING
 ${scn.setting}
 
 YOUR CHARACTER AND PRESSURES
+${scn.persona}
 ${scn.resistance}
 
 CURRENT OPENNESS: ${openness}/100. Below 30 you are hostile and guarded. 30-60 you are wary but engaged. Above 60 you are constructive and start proposing detail yourself. Let this number shape your tone.

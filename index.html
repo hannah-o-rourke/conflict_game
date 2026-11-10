@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
 <style>
-/* Layout concept: a dark negotiation table. One column of play (dialogue) with the
-   approach cards as the players' hand beside it. Scenario accent recolors the room. */
+/* Layout concept: a dark negotiation table. Briefing dossier -> table -> reveal.
+   Scenario accent recolors the room. */
 :root{
   --bg:#14161b;
   --panel:#1c1f26;
@@ -37,21 +37,23 @@ body{
 .wrap{max-width:1080px;margin:0 auto;padding-block:28px 48px}
 h1,h2,h3{line-height:1.15;text-wrap:balance;margin:0}
 a{color:var(--accent)}
+img{max-width:100%}
 button{font-family:var(--display);cursor:pointer}
 .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.accent{color:var(--accent)}
 
 /* ---------- home ---------- */
 #home header{display:flex;flex-direction:column;gap:10px;margin-bottom:30px}
 #home h1{font-size:clamp(28px,5vw,44px);font-weight:700}
-#home .sub{color:var(--muted);max-width:62ch;font-family:var(--voice);font-size:16px}
+#home .sub{color:var(--muted);max-width:62ch;font-family:var(--voice);font-size:16px;margin:0}
 .scenarios{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:8px}
 .scn{
   text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;
-  padding:18px;color:var(--fg);display:flex;flex-direction:column;gap:9px;
+  padding:0;color:var(--fg);display:flex;flex-direction:column;overflow:hidden;
   transition:border-color .15s, transform .15s;
 }
 .scn:hover{border-color:var(--sc);transform:translateY(-2px)}
+.scn .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid var(--line)}
+.scn .inner{padding:16px 18px 18px;display:flex;flex-direction:column;gap:9px;flex:1}
 .scn .kind{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sc)}
 .scn h2{font-size:21px}
 .scn p{margin:0;color:var(--muted);font-size:13.5px}
@@ -60,6 +62,40 @@ button{font-family:var(--display);cursor:pointer}
 #home footer{margin-top:40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.5px}
 #home footer a{color:var(--muted)}
 
+/* ---------- briefing ---------- */
+#brief{display:none}
+.hero{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px}
+.hero img{display:block;width:100%;aspect-ratio:21/9;object-fit:cover}
+.hero .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,22,27,.92),rgba(20,22,27,.05) 55%)}
+.hero .ht{position:absolute;left:20px;right:20px;bottom:16px}
+.hero .ht h1{font-size:clamp(26px,4.5vw,40px)}
+.hero.noimg{background:
+  radial-gradient(120% 140% at 85% 0%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 60%),var(--panel)}
+.hero.noimg .pad{aspect-ratio:21/7}
+.setting{font-family:var(--voice);font-size:16.5px;max-width:68ch;display:flex;flex-direction:column;gap:12px}
+.setting p{margin:0}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.bcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.bcard.you{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+.bcard .role{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.bcard.you .role{color:var(--accent)}
+.bhead{display:flex;align-items:center;gap:12px}
+.pface{width:64px;height:64px;flex:none;border-radius:50%;object-fit:cover;border:1.5px solid var(--accent);background:var(--panel-2)}
+.sigil{width:64px;height:64px;flex:none;border-radius:50%;border:1.5px solid var(--accent);background:var(--panel-2);display:grid;place-items:center}
+.sigil svg{width:34px;height:34px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sigil.sm,.pface.sm{width:50px;height:50px}
+.sigil.sm svg{width:28px;height:28px}
+.bhead .nm{font-size:17px;font-weight:700}
+.bhead .fc{font-size:12.5px;color:var(--muted)}
+.bcard p{margin:0;font-family:var(--voice);font-size:14.5px}
+.stakes{margin-top:14px;background:color-mix(in srgb,var(--accent) 9%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:10px;padding:14px 16px}
+.stakes h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.stakes p{margin:0;font-family:var(--voice);font-size:15px}
+.rowbtns{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center}
+.pb{background:var(--accent);color:var(--accent-ink);border:none;border-radius:9px;padding:11px 18px;font-weight:700;font-size:14px}
+.pb.ghost{background:none;border:1px solid var(--line);color:var(--fg);font-weight:500}
+.rowbtns .hint{color:var(--muted);font-size:12.5px}
+
 /* ---------- game ---------- */
 #game{display:none}
 .topbar{
@@ -67,6 +103,7 @@ button{font-family:var(--display);cursor:pointer}
   padding:12px 0;border-bottom:1px solid var(--line);margin-bottom:16px;
   position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;
 }
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .topbar .title{display:flex;flex-direction:column;min-width:0}
 .topbar h2{font-size:17px}
 .topbar .who{font-size:12px;color:var(--muted)}
@@ -86,8 +123,6 @@ button{font-family:var(--display);cursor:pointer}
 .board{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
 .chatcol{display:flex;flex-direction:column;gap:12px;min-width:0}
 .portrait{display:flex;align-items:center;gap:12px}
-.sigil{width:52px;height:52px;flex:none;border-radius:50%;border:1.5px solid var(--accent);background:var(--panel);display:grid;place-items:center}
-.sigil svg{width:30px;height:30px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .portrait .nm{font-size:16px;font-weight:700}
 .portrait .fc{font-size:12px;color:var(--muted)}
 #log{display:flex;flex-direction:column;gap:12px;min-height:220px}
@@ -138,9 +173,6 @@ textarea:focus{outline:none;border-color:var(--accent)}
 .panelbox li small{display:block;color:var(--muted)}
 .outcome{font-size:clamp(22px,4vw,30px);font-weight:700;margin-top:22px}
 .outcome small{display:block;font-size:14px;font-weight:400;color:var(--muted);margin-top:6px;font-family:var(--voice)}
-.rowbtns{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
-.pb{background:var(--accent);color:var(--accent-ink);border:none;border-radius:9px;padding:10px 16px;font-weight:700;font-size:14px}
-.pb.ghost{background:none;border:1px solid var(--line);color:var(--fg);font-weight:500}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chip{border:1px solid var(--accent);color:var(--accent);border-radius:99px;padding:4px 11px;font-size:12.5px}
 .playedlist{display:flex;gap:8px;flex-wrap:wrap}
@@ -151,8 +183,9 @@ textarea:focus{outline:none;border-color:var(--accent)}
 @media (max-width:760px){
   .board{grid-template-columns:1fr}
   .handcol{order:-1}
-  .hand{grid-template-columns:1fr 1fr}
+  .bgrid{grid-template-columns:1fr}
   .clock{font-size:18px}
+  .hero img{aspect-ratio:16/10}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -169,9 +202,33 @@ textarea:focus{outline:none;border-color:var(--accent)}
   </header>
   <div class="scenarios" id="scnlist"></div>
   <footer>
-    <span>Pick a scenario · 10 minutes on the clock · the clock starts on your first move</span>
+    <span>Pick a scenario · read your briefing · 10 minutes on the clock</span>
     <a href="#facilitator" id="facillink">Facilitator view</a>
   </footer>
+</section>
+
+<!-- ============ BRIEFING ============ -->
+<section id="brief">
+  <div class="hero" id="b-hero"></div>
+  <div class="setting" id="b-setting"></div>
+  <div class="bgrid">
+    <div class="bcard you">
+      <span class="role">You are</span>
+      <div class="bhead"><span id="b-youface"></span><div><div class="nm" id="b-youname"></div><div class="fc" id="b-youfc"></div></div></div>
+      <p id="b-youbrief"></p>
+    </div>
+    <div class="bcard">
+      <span class="role">Across the table</span>
+      <div class="bhead"><span id="b-aiface"></span><div><div class="nm" id="b-ainame"></div><div class="fc" id="b-aifc"></div></div></div>
+      <p id="b-aibrief"></p>
+    </div>
+  </div>
+  <div class="stakes"><h3>The stakes</h3><p id="b-stakes"></p></div>
+  <div class="rowbtns">
+    <button class="pb" id="b-start">Take your seat</button>
+    <button class="pb ghost" id="b-back">Back</button>
+    <span class="hint">The clock starts on your first move, not before.</span>
+  </div>
 </section>
 
 <!-- ============ GAME ============ -->
@@ -199,7 +256,7 @@ textarea:focus{outline:none;border-color:var(--accent)}
   <div class="board">
     <div class="chatcol">
       <div class="portrait">
-        <div class="sigil" id="g-sigil"></div>
+        <span id="g-face"></span>
         <div><div class="nm" id="g-ai"></div><div class="fc" id="g-faction"></div></div>
       </div>
       <div id="log"></div>
@@ -266,33 +323,55 @@ const SIGILS = {
   tree: '<svg viewBox="0 0 24 24"><path d="M12 21v-7M12 14c-4 0-6.5-2.6-6.5-6C5.5 4.6 8.4 3 12 3s6.5 1.6 6.5 5c0 3.4-2.5 6-6.5 6z"/><path d="M9 10c1 .8 2 1.2 3 1.2S14 10.8 15 10"/></svg>',
   claw: '<svg viewBox="0 0 24 24"><path d="M5 20c0-6 2-11 4-14M12 20c0-7 1-12 2-15M19 20c-1-6-3-10-5-13"/><path d="M4 20h16"/></svg>',
   star: '<svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/><circle cx="12" cy="12" r="3.5"/></svg>',
+  crest:'<svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>',
 };
 const SCN = {
   eldoria: {
     title:"The Enchanted Forest", kind:"Resource conflict", accent:"#7fb069",
     tagline:"A dispute mired in historical claims and abstract rights.",
-    setting:"The Kingdom of Eldoria disputes the Enchanted Forest with the Elven Kingdom. The bark of its ancient trees could power scientific advancement. So far the argument has been about who the land really belongs to.",
-    player:"Lord Aric of the Eldorian Council",
-    playerBrief:"You want your legacy to be bringing science and progress to your people, and the ancient bark is the key. Your father and your council are watching. Legally the land is human land, but pressing the point has got you nowhere for months.",
-    ai:"Eleniel", faction:"Ranger of the Elven Kingdom", sigil:"tree", unlockCount:2, minutes:10,
+    ai:"Eleniel", faction:"Ranger of the Elven Kingdom", sigil:"tree",
+    playerName:"Lord Aric", playerFc:"Noble of the Eldorian Council", playerKey:"aric",
+    unlockCount:2, minutes:10,
+    setting:[
+      "The Kingdom of Eldoria and the Elven Kingdom both claim the Enchanted Forest, a mystical woodland rich in resources. Deep inside it grow ancient trees whose bark, Eldorian scholars believe, could power a generation of scientific advancement for the whole nation.",
+      "Generations ago the elves signed a treaty: they keep their own systems and rules of governance, but live under the protection of the human crown. On paper, the land is human land. The elves have never truly accepted that, and every negotiation so far has sunk into historical claims and abstract rights.",
+      "Today the elves have sent Eleniel, a ranger raised in the heart of the forest, to meet you alone."
+    ],
+    youBrief:"You grew up in a politically astute family, and your father is watching how you lead. You want your legacy to be bringing science and technology to the people of Eldoria, and the ancient bark is the key to it. You value practical solutions, you tend to prioritise short-term gains, and your council is pressing you to show progress. You believe the land belongs to the humans, and you have never really understood the elves' spiritual connection to the forest. It has cost you in every talk so far.",
+    aiBrief:"Eleniel sees the forest as a sacred, living entity, and knows its ecology and history better than anyone alive. He does not recognise your kingdom's right to the land, treaty or no treaty. He is said to distrust the short-sighted goals of humans and to fear losing his homeland to your expansion. The elven kingdom has sent him with firm instructions. How firm, you do not know.",
+    stakes:"No bark, and your science programme and your standing with the council stall. Push too hard, and a treaty that has held for generations breaks on your watch.",
     opener:"You summoned me, Lord Aric, so speak plainly. My people believe your council sees only timber and bark where we see a living ancestor. The treaty says we live under your protection, but the forest was ours before your kingdom had a name. Tell me why this conversation will be different from the last three."
   },
   generator: {
     title:"The Generator", kind:"Factional conflict", accent:"#d96c3f",
     tagline:"Two factions, one machine, three weeks, and blood in the past.",
-    setting:"Phoenix and Tiger Claw have both found an old generator that could bring back electricity. Phoenix has the scientist, Tiger Claw the mechanic. The factions have killed each other over food before. The battery dies in three weeks, and the better-armed Dynamite faction is getting closer.",
-    player:"Solara, leader of Phoenix",
-    playerBrief:"You lead a faction of former academics and you carry guilt about the violence and trickery your people used in the early days. You want to work with Tiger Claw, and you hope the generator could start a new society. But they do not trust you, and you know why.",
-    ai:"Raven", faction:"Leader of Tiger Claw", sigil:"claw", unlockCount:3, minutes:10,
+    ai:"Raven", faction:"Leader of Tiger Claw", sigil:"claw",
+    playerName:"Solara", playerFc:"Leader of Phoenix", playerKey:"solara",
+    unlockCount:3, minutes:10,
+    setting:[
+      "The old world is gone. In the ruins, factions survive: yours, Phoenix, built from the academics of a university; Tiger Claw, built from the people of a town; and others, worse, further out.",
+      "Both Phoenix and Tiger Claw have discovered an old generator that could do what everyone thought impossible: bring back electricity. Your faction has the scientist who can make it work. Theirs has the mechanic who can get it started. Both sides claim the find, and the generator's battery becomes useless in three weeks.",
+      "Your scouts report that Dynamite, a faction with better weapons than either of you, is getting closer."
+    ],
+    youBrief:"You took over Phoenix from the former university Chancellor, who was more ruthless than you. Your faction has survived by negotiating with communities, but it has also resorted to violence and trickery when cornered, and you carry deep guilt about those times. You want to work with Tiger Claw and their mechanic, and you hope the generator could be the start of a new society. You also know exactly why they do not trust you.",
+    aiBrief:"Raven leads Tiger Claw: charismatic, hard, shaped by loss. Her people all lived in the same town before the collapse, and they are loyal to her completely. Early on, her partner was killed by Phoenix. Word is that half her camp wants to take your scientist by force rather than talk. You do not know how she weighs those voices.",
+    stakes:"Three weeks until the battery is dead, and Dynamite is closing in on both of you. If this meeting fails, the next contact between your factions will not be a conversation.",
     opener:"You have got nerve coming here, Phoenix. That generator sits on our ground and our mechanic found it. And the last time your people and mine stood this close, I buried my partner. Half my camp wants me to take your scientist by force and be done with it. You have one minute to tell me why I should not."
   },
   mythlandia: {
     title:"Quest for the Crown", kind:"Succession conflict", accent:"#cfa14a",
     tagline:"No heir, no elections, and two incompatible ideas of legitimacy.",
-    setting:"Mythlandia's hereditary line is broken. The knights and army want the heir chosen by tournament; the mystics await a prophetic sign. Elections are impossible at scale. Without a legitimate heir, the kingdom slides into civil war.",
-    player:"Sir Gareth, the kingdom's top knight",
-    playerBrief:"You negotiate for the common folk, the knights and the army. You were raised to believe worth is proven in battle and you are sceptical of mysticism. But a tournament alone will never get the mystics' assent, and you have been sent to prevent a war.",
-    ai:"Mira", faction:"Sage of the Mystics", sigil:"star", unlockCount:2, minutes:10,
+    ai:"Mira", faction:"Sage of the Mystics", sigil:"star",
+    playerName:"Sir Gareth", playerFc:"The kingdom's top knight", playerKey:"gareth",
+    unlockCount:2, minutes:10,
+    setting:[
+      "Mythlandia has always been ruled by a hereditary line, and a tragic accident has broken it. There is no heir, and the kingdom's communities, common folk, knights and the army, mystics, fairies and others, cannot agree how to choose one.",
+      "The knights and the army believe the heir should be proven in a physical tournament. The mystics believe the heir will be revealed by a sign, and are waiting for the heavens to speak. Elections are impossible: the kingdom has no way to run them at scale.",
+      "You have been summoned to meet Mira, a sage who speaks for the mystics and the fairies. Between the two of you, you must find a way to appoint an heir that does not start a war."
+    ],
+    youBrief:"You are the kingdom's most renowned knight, negotiating for the common folk, the knights and the army. You were raised where martial prowess was prized, and you value honour and strength. You are sceptical of ways of establishing legitimacy that do not involve proving one's worth, and mysticism has always struck you as theatre. But you have your orders: come back with a path to an heir the whole kingdom can accept.",
+    aiBrief:"Mira grew up in a secluded temple, learning ancient lore and the subtle art of diplomacy. She believes in destiny and in mystical legitimacy, and she has spent a lifetime at odds with those who only value strength. She is no zealot, they say, but she will not accept a tournament, and the mystics will treat any victor of one as a usurper.",
+    stakes:"Whatever you two agree, both the army and the mystics must be able to call it rightful. Anything less is a coronation with a war attached.",
     opener:"Sir Gareth. The mystics have read the same sky for three hundred years, and the sky has not yet spoken. Your soldiers sharpen swords for a tournament my people will never accept, and my people wait for a sign your soldiers will never believe. If we leave this room with nothing, we leave it with a war. So: what do you propose?"
   },
 };
@@ -309,12 +388,30 @@ const METHODS = [
   {id:10,emoji:"🔣", name:"Symbolic ambiguity", blurb:"A constructive fudge both sides can live with."},
 ];
 
+// ---------- images (filled in by images.json; everything falls back to sigils) ----------
+let IMGS = { scenes:{}, portraits:{} };
+fetch("images.json").then(r=>r.json()).then(j=>{
+  IMGS = j && j.scenes ? j : IMGS;
+  renderHome();
+  if (BRIEFED) renderBrief(BRIEFED);
+  if (S) renderFace();
+}).catch(()=>{});
+
+function faceHtml(portraitKey, sigilKey, size){
+  const url = IMGS.portraits && IMGS.portraits[portraitKey];
+  const cls = size==="sm" ? " sm" : "";
+  if (url) return `<img class="pface${cls}" src="${url}" alt="">`;
+  return `<span class="sigil${cls}">${SIGILS[sigilKey]||SIGILS.crest}</span>`;
+}
+
 // ---------- state ----------
-let S = null; // current round state
+let S = null;       // current round state
+let BRIEFED = null; // scenario id on the briefing screen
 
 const $ = (id)=>document.getElementById(id);
-const show = (id)=>{ for (const s of ["home","game","reveal","facil"]) $(s).style.display = (s===id)?"block":"none"; };
+const show = (id)=>{ for (const s of ["home","brief","game","reveal","facil"]) $(s).style.display = (s===id)?"block":"none"; };
 function setAccent(hex){ document.documentElement.style.setProperty("--accent", hex||"#d9c6a0"); }
+function escapeHtml(t){ const x=document.createElement("span"); x.textContent=t; return x.innerHTML; }
 
 // ---------- home ----------
 function renderHome(){
@@ -322,35 +419,64 @@ function renderHome(){
   for (const [id,s] of Object.entries(SCN)){
     const b = document.createElement("button");
     b.className = "scn"; b.style.setProperty("--sc", s.accent);
-    b.innerHTML = `<span class="kind">${s.kind}</span><h2>${s.title}</h2><p>${s.tagline}</p>
-      <span class="vs">You play <b>${s.player.split(",")[0]}</b> · facing <b>${s.ai}</b></span>`;
-    b.onclick = ()=>startRound(id);
+    const thumb = IMGS.scenes && IMGS.scenes[id] ? `<img class="thumb" src="${IMGS.scenes[id]}" alt="">` : "";
+    b.innerHTML = `${thumb}<span class="inner"><span class="kind">${s.kind}</span><h2>${s.title}</h2><p>${s.tagline}</p>
+      <span class="vs">You play <b>${s.playerName}</b> · facing <b>${s.ai}</b></span></span>`;
+    b.onclick = ()=>openBrief(id);
     list.appendChild(b);
   }
 }
+
+// ---------- briefing ----------
+function openBrief(id){ BRIEFED = id; renderBrief(id); show("brief"); window.scrollTo(0,0); }
+function renderBrief(id){
+  const s = SCN[id];
+  setAccent(s.accent);
+  const scene = IMGS.scenes && IMGS.scenes[id];
+  $("b-hero").className = "hero" + (scene?"":" noimg");
+  $("b-hero").innerHTML = (scene
+    ? `<img src="${scene}" alt=""><div class="scrim"></div>`
+    : `<div class="pad"></div>`)
+    + `<div class="ht"><span class="kicker" style="color:var(--accent)">${s.kind} · your briefing</span><h1>${s.title}</h1></div>`;
+  $("b-setting").innerHTML = s.setting.map(p=>`<p>${p}</p>`).join("");
+  $("b-youface").innerHTML = faceHtml(s.playerKey, "crest");
+  $("b-youname").textContent = s.playerName;
+  $("b-youfc").textContent = s.playerFc;
+  $("b-youbrief").textContent = s.youBrief;
+  $("b-aiface").innerHTML = faceHtml(s.ai.toLowerCase(), s.sigil);
+  $("b-ainame").textContent = s.ai;
+  $("b-aifc").textContent = s.faction;
+  $("b-aibrief").textContent = s.aiBrief;
+  $("b-stakes").textContent = s.stakes;
+}
+$("b-start").onclick = ()=>{ if (BRIEFED) startRound(BRIEFED); };
+$("b-back").onclick = ()=>{ BRIEFED=null; setAccent(null); show("home"); };
 
 // ---------- round ----------
 function startRound(id){
   const s = SCN[id];
   S = { id, openness:25, unlocked:[], history:[], played:{}, secs:s.minutes*60,
-        started:false, paused:false, over:false, agreement:false, timer:null };
+        started:false, paused:false, over:false, agreement:false, timer:null, method:null };
   setAccent(s.accent);
   $("g-title").textContent = s.title;
-  $("g-who").textContent = `You are ${s.player}. ${s.playerBrief}`;
+  $("g-who").textContent = `You are ${s.playerName}, ${s.playerFc.toLowerCase()}.`;
   $("g-ai").textContent = s.ai;
   $("g-faction").textContent = s.faction;
-  $("g-sigil").innerHTML = SIGILS[s.sigil];
+  renderFace();
   $("pips").innerHTML = Array.from({length:s.unlockCount},()=>'<span class="pip"></span>').join("");
   $("meterfill").style.width = "25%";
   $("log").innerHTML = "";
-  $("input").value = ""; S.method = null;
-  $("playing").innerHTML = "Choose an approach card, then make your move.";
+  $("input").value = "";
   renderHand();
-  addMsg("note", s.setting);
   addMsg("ch", s.opener, s.ai);
   updateClock(); $("pausebtn").textContent = "Pause";
   show("game");
   $("input").focus();
+}
+function renderFace(){
+  if (!S) return;
+  const s = SCN[S.id];
+  $("g-face").innerHTML = faceHtml(s.ai.toLowerCase(), s.sigil, "sm");
 }
 
 function renderHand(){
@@ -384,7 +510,6 @@ function addMsg(kind, text, tag){
   d.scrollIntoView({behavior:"smooth", block:"end"});
   return d;
 }
-function escapeHtml(t){ const x=document.createElement("span"); x.textContent=t; return x.innerHTML; }
 
 async function sendMove(){
   const text = $("input").value.trim();

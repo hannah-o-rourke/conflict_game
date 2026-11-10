@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Conflicts & Politics: a negotiation game where players apply conflict-resolution approaches against AI-played characters"
+  "description": "Conflicts & Politics: a negotiation game where players apply conflict-resolution approaches against AI-played characters",
+  "dependencies": {
+    "@vercel/blob": "^0.27.0"
+  }
 }
