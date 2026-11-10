@@ -1,0 +1,7 @@
+{
+  "name": "conflict-game",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Conflicts & Politics: a negotiation game where players apply conflict-resolution approaches against AI-played characters"
+}

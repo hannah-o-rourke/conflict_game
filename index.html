@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conflicts &amp; Politics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Layout concept: a dark negotiation table. One column of play (dialogue) with the
+   approach cards as the players' hand beside it. Scenario accent recolors the room. */
+:root{
+  --bg:#14161b;
+  --panel:#1c1f26;
+  --panel-2:#22262f;
+  --line:#2d323d;
+  --fg:#e9e6dd;
+  --muted:#99a0ac;
+  --accent:#d9c6a0;      /* repainted per scenario */
+  --accent-ink:#14161b;
+  --bad:#d06a5a;
+  --good:#8fbf7f;
+  --display:"Space Grotesk",system-ui,sans-serif;
+  --voice:"Spectral",Georgia,serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:var(--display);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0;
+}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 48px}
+h1,h2,h3{line-height:1.15;text-wrap:balance;margin:0}
+a{color:var(--accent)}
+button{font-family:var(--display);cursor:pointer}
+.kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.accent{color:var(--accent)}
+
+/* ---------- home ---------- */
+#home header{display:flex;flex-direction:column;gap:10px;margin-bottom:30px}
+#home h1{font-size:clamp(28px,5vw,44px);font-weight:700}
+#home .sub{color:var(--muted);max-width:62ch;font-family:var(--voice);font-size:16px}
+.scenarios{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:8px}
+.scn{
+  text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:18px;color:var(--fg);display:flex;flex-direction:column;gap:9px;
+  transition:border-color .15s, transform .15s;
+}
+.scn:hover{border-color:var(--sc);transform:translateY(-2px)}
+.scn .kind{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sc)}
+.scn h2{font-size:21px}
+.scn p{margin:0;color:var(--muted);font-size:13.5px}
+.scn .vs{margin-top:auto;padding-top:8px;border-top:1px solid var(--line);font-size:13px}
+.scn .vs b{color:var(--sc)}
+#home footer{margin-top:40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.5px}
+#home footer a{color:var(--muted)}
+
+/* ---------- game ---------- */
+#game{display:none}
+.topbar{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:12px 0;border-bottom:1px solid var(--line);margin-bottom:16px;
+  position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;
+}
+.topbar .title{display:flex;flex-direction:column;min-width:0}
+.topbar h2{font-size:17px}
+.topbar .who{font-size:12px;color:var(--muted)}
+.gauge{display:flex;flex-direction:column;gap:4px;min-width:140px}
+.gauge label{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.meter{height:7px;background:var(--panel-2);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;width:25%;background:var(--accent);transition:width .5s}
+.pips{display:flex;gap:6px;align-items:center}
+.pip{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--muted);transition:all .3s}
+.pip.on{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px color-mix(in srgb,var(--accent) 60%,transparent)}
+.clock{font-variant-numeric:tabular-nums;font-size:22px;font-weight:500;min-width:74px;text-align:right}
+.clock.low{color:var(--bad)}
+.topbar .spacer{flex:1}
+.tbtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:6px 11px;font-size:12.5px}
+.tbtn:hover{border-color:var(--accent);color:var(--fg)}
+
+.board{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+.chatcol{display:flex;flex-direction:column;gap:12px;min-width:0}
+.portrait{display:flex;align-items:center;gap:12px}
+.sigil{width:52px;height:52px;flex:none;border-radius:50%;border:1.5px solid var(--accent);background:var(--panel);display:grid;place-items:center}
+.sigil svg{width:30px;height:30px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.portrait .nm{font-size:16px;font-weight:700}
+.portrait .fc{font-size:12px;color:var(--muted)}
+#log{display:flex;flex-direction:column;gap:12px;min-height:220px}
+.msg{max-width:92%;border-radius:10px;padding:11px 14px;font-size:15px}
+.msg.ch{background:var(--panel);border:1px solid var(--line);font-family:var(--voice);font-size:16px;align-self:flex-start;border-left:3px solid var(--accent)}
+.msg.pl{background:var(--panel-2);align-self:flex-end}
+.msg .tag{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-family:var(--display)}
+.msg.note{align-self:center;background:none;color:var(--muted);font-size:12.5px;border:1px dashed var(--line)}
+.msg.breakthrough{align-self:center;background:color-mix(in srgb,var(--accent) 14%,var(--panel));border:1px solid var(--accent);color:var(--fg);font-size:13px}
+.typing{color:var(--muted);font-size:13px;display:none;padding-left:4px}
+.compose{display:flex;flex-direction:column;gap:8px;position:sticky;bottom:0;background:var(--bg);padding-block:10px 14px}
+.playing{font-size:12.5px;color:var(--muted);min-height:18px}
+.playing b{color:var(--accent)}
+.inputrow{display:flex;gap:8px}
+textarea{
+  flex:1;min-height:58px;resize:vertical;background:var(--panel);border:1px solid var(--line);
+  border-radius:9px;color:var(--fg);font-family:var(--display);font-size:15px;padding:10px 12px;min-width:0;
+}
+textarea:focus{outline:none;border-color:var(--accent)}
+#send{
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:9px;
+  padding:0 18px;font-weight:700;font-size:14px;
+}
+#send:disabled{opacity:.4;cursor:not-allowed}
+
+.handcol{display:flex;flex-direction:column;gap:10px;min-width:0}
+.handcol .kicker{margin-bottom:2px}
+.hand{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.card{
+  text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:9px;
+  padding:9px 11px;color:var(--fg);display:flex;flex-direction:column;gap:3px;transition:border-color .12s;
+}
+.card:hover{border-color:var(--muted)}
+.card.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--panel))}
+.card .cn{font-size:12.5px;font-weight:500}
+.card .cb{font-size:11px;color:var(--muted);display:none}
+.card.sel .cb{display:block}
+.card .ct{display:flex;gap:6px;align-items:baseline}
+.card .uses{margin-left:auto;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ---------- reveal & facilitator ---------- */
+#reveal,#facil{display:none}
+.panelbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;margin-top:14px}
+.panelbox h3{font-size:15px;margin-bottom:10px;color:var(--accent)}
+.panelbox ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:14px}
+.panelbox li .st{font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-right:6px}
+.hit .st{color:var(--good)} .miss .st{color:var(--bad)}
+.panelbox li small{display:block;color:var(--muted)}
+.outcome{font-size:clamp(22px,4vw,30px);font-weight:700;margin-top:22px}
+.outcome small{display:block;font-size:14px;font-weight:400;color:var(--muted);margin-top:6px;font-family:var(--voice)}
+.rowbtns{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.pb{background:var(--accent);color:var(--accent-ink);border:none;border-radius:9px;padding:10px 16px;font-weight:700;font-size:14px}
+.pb.ghost{background:none;border:1px solid var(--line);color:var(--fg);font-weight:500}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--accent);color:var(--accent);border-radius:99px;padding:4px 11px;font-size:12.5px}
+.playedlist{display:flex;gap:8px;flex-wrap:wrap}
+.playedlist .chip{border-color:var(--line);color:var(--muted)}
+.facil-scn{margin-top:26px}
+.facil-scn h2{font-size:20px;color:var(--accent)}
+
+@media (max-width:760px){
+  .board{grid-template-columns:1fr}
+  .handcol{order:-1}
+  .hand{grid-template-columns:1fr 1fr}
+  .clock{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ HOME ============ -->
+<section id="home">
+  <header>
+    <span class="kicker">Conflicts &amp; Politics · Newspeak House</span>
+    <h1>The Negotiation Table</h1>
+    <p class="sub">Conflicts are necessary to politics. They are inevitable, and in fact they are creative. Your group plays a negotiator; an AI plays the other side of the table, with their own history, pressures and wounds. Play the approaches from the session against them. Some will land. Most will land only if you mean them.</p>
+  </header>
+  <div class="scenarios" id="scnlist"></div>
+  <footer>
+    <span>Pick a scenario · 10 minutes on the clock · the clock starts on your first move</span>
+    <a href="#facilitator" id="facillink">Facilitator view</a>
+  </footer>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="game">
+  <div class="topbar">
+    <button class="tbtn" id="backbtn" title="Abandon round">←</button>
+    <div class="title">
+      <h2 id="g-title"></h2>
+      <span class="who" id="g-who"></span>
+    </div>
+    <div class="spacer"></div>
+    <div class="gauge">
+      <label>Openness</label>
+      <div class="meter"><i id="meterfill"></i></div>
+    </div>
+    <div class="gauge">
+      <label>Breakthroughs</label>
+      <div class="pips" id="pips"></div>
+    </div>
+    <div class="clock" id="clock">10:00</div>
+    <button class="tbtn" id="pausebtn">Pause</button>
+    <button class="tbtn" id="endbtn">End round</button>
+  </div>
+
+  <div class="board">
+    <div class="chatcol">
+      <div class="portrait">
+        <div class="sigil" id="g-sigil"></div>
+        <div><div class="nm" id="g-ai"></div><div class="fc" id="g-faction"></div></div>
+      </div>
+      <div id="log"></div>
+      <div class="typing" id="typing">…</div>
+      <div class="compose">
+        <div class="playing" id="playing">Choose an approach card, then make your move.</div>
+        <div class="inputrow">
+          <textarea id="input" maxlength="900" placeholder="Speak as your negotiator…"></textarea>
+          <button id="send" disabled>Make<br>move</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="handcol">
+      <span class="kicker">Your hand · the ten approaches</span>
+      <div class="hand" id="hand"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVEAL ============ -->
+<section id="reveal">
+  <span class="kicker">Round over · the reveal</span>
+  <div class="outcome" id="r-outcome"></div>
+  <div class="panelbox">
+    <h3>This scenario was keyed to</h3>
+    <div class="chips" id="r-keyed"></div>
+  </div>
+  <div class="panelbox">
+    <h3>Hidden breakthrough conditions</h3>
+    <ul id="r-unlocks"></ul>
+  </div>
+  <div class="panelbox">
+    <h3>What you played</h3>
+    <div class="playedlist" id="r-played"></div>
+  </div>
+  <div class="panelbox">
+    <h3>Design intent</h3>
+    <p id="r-solution" style="margin:0;font-family:var(--voice);font-size:15px"></p>
+  </div>
+  <div class="panelbox">
+    <h3>For the debrief</h3>
+    <ul id="r-debrief"></ul>
+  </div>
+  <div class="rowbtns">
+    <button class="pb" id="r-again">Play another scenario</button>
+    <button class="pb ghost" id="r-replay">Replay this one</button>
+  </div>
+</section>
+
+<!-- ============ FACILITATOR ============ -->
+<section id="facil">
+  <span class="kicker">Facilitator view · do not project</span>
+  <h1 style="font-size:28px;margin-top:8px">All conditions &amp; keys</h1>
+  <div id="facilbody"><p style="color:var(--muted)">Loading…</p></div>
+  <div class="rowbtns"><button class="pb ghost" id="facilback">Back</button></div>
+</section>
+
+</div>
+
+<script>
+// ---------- public scenario data (no hidden conditions here) ----------
+const SIGILS = {
+  tree: '<svg viewBox="0 0 24 24"><path d="M12 21v-7M12 14c-4 0-6.5-2.6-6.5-6C5.5 4.6 8.4 3 12 3s6.5 1.6 6.5 5c0 3.4-2.5 6-6.5 6z"/><path d="M9 10c1 .8 2 1.2 3 1.2S14 10.8 15 10"/></svg>',
+  claw: '<svg viewBox="0 0 24 24"><path d="M5 20c0-6 2-11 4-14M12 20c0-7 1-12 2-15M19 20c-1-6-3-10-5-13"/><path d="M4 20h16"/></svg>',
+  star: '<svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/><circle cx="12" cy="12" r="3.5"/></svg>',
+};
+const SCN = {
+  eldoria: {
+    title:"The Enchanted Forest", kind:"Resource conflict", accent:"#7fb069",
+    tagline:"A dispute mired in historical claims and abstract rights.",
+    setting:"The Kingdom of Eldoria disputes the Enchanted Forest with the Elven Kingdom. The bark of its ancient trees could power scientific advancement. So far the argument has been about who the land really belongs to.",
+    player:"Lord Aric of the Eldorian Council",
+    playerBrief:"You want your legacy to be bringing science and progress to your people, and the ancient bark is the key. Your father and your council are watching. Legally the land is human land, but pressing the point has got you nowhere for months.",
+    ai:"Eleniel", faction:"Ranger of the Elven Kingdom", sigil:"tree", unlockCount:2, minutes:10,
+    opener:"You summoned me, Lord Aric, so speak plainly. My people believe your council sees only timber and bark where we see a living ancestor. The treaty says we live under your protection, but the forest was ours before your kingdom had a name. Tell me why this conversation will be different from the last three."
+  },
+  generator: {
+    title:"The Generator", kind:"Factional conflict", accent:"#d96c3f",
+    tagline:"Two factions, one machine, three weeks, and blood in the past.",
+    setting:"Phoenix and Tiger Claw have both found an old generator that could bring back electricity. Phoenix has the scientist, Tiger Claw the mechanic. The factions have killed each other over food before. The battery dies in three weeks, and the better-armed Dynamite faction is getting closer.",
+    player:"Solara, leader of Phoenix",
+    playerBrief:"You lead a faction of former academics and you carry guilt about the violence and trickery your people used in the early days. You want to work with Tiger Claw, and you hope the generator could start a new society. But they do not trust you, and you know why.",
+    ai:"Raven", faction:"Leader of Tiger Claw", sigil:"claw", unlockCount:3, minutes:10,
+    opener:"You have got nerve coming here, Phoenix. That generator sits on our ground and our mechanic found it. And the last time your people and mine stood this close, I buried my partner. Half my camp wants me to take your scientist by force and be done with it. You have one minute to tell me why I should not."
+  },
+  mythlandia: {
+    title:"Quest for the Crown", kind:"Succession conflict", accent:"#cfa14a",
+    tagline:"No heir, no elections, and two incompatible ideas of legitimacy.",
+    setting:"Mythlandia's hereditary line is broken. The knights and army want the heir chosen by tournament; the mystics await a prophetic sign. Elections are impossible at scale. Without a legitimate heir, the kingdom slides into civil war.",
+    player:"Sir Gareth, the kingdom's top knight",
+    playerBrief:"You negotiate for the common folk, the knights and the army. You were raised to believe worth is proven in battle and you are sceptical of mysticism. But a tournament alone will never get the mystics' assent, and you have been sent to prevent a war.",
+    ai:"Mira", faction:"Sage of the Mystics", sigil:"star", unlockCount:2, minutes:10,
+    opener:"Sir Gareth. The mystics have read the same sky for three hundred years, and the sky has not yet spoken. Your soldiers sharpen swords for a tournament my people will never accept, and my people wait for a sign your soldiers will never believe. If we leave this room with nothing, we leave it with a war. So: what do you propose?"
+  },
+};
+const METHODS = [
+  {id:1, emoji:"🪨", name:"Get concrete about interests", blurb:"Swap values talk for specific, nameable asks."},
+  {id:2, emoji:"🗂️", name:"Minimal vs substantial", blurb:"Work out what is actually worth fighting for."},
+  {id:3, emoji:"🪜", name:"Process by process", blurb:"Start with one small agreement."},
+  {id:4, emoji:"🎭", name:"Creative legitimacy", blurb:"Legitimacy beyond votes: custom, trust, design."},
+  {id:5, emoji:"🧭", name:"Shared purpose / enemy", blurb:"Construct a reason to cooperate."},
+  {id:6, emoji:"👋", name:"Coalition of the willing", blurb:"Do the thing with those willing to do it."},
+  {id:7, emoji:"🤝", name:"Repair the relational", blurb:"Rebuild the human relationship first."},
+  {id:8, emoji:"🔍", name:"Feelings & proxies", blurb:"Name what the fight is really about."},
+  {id:9, emoji:"📖", name:"Utilise stories", blurb:"Use narrative to move people forward."},
+  {id:10,emoji:"🔣", name:"Symbolic ambiguity", blurb:"A constructive fudge both sides can live with."},
+];
+
+// ---------- state ----------
+let S = null; // current round state
+
+const $ = (id)=>document.getElementById(id);
+const show = (id)=>{ for (const s of ["home","game","reveal","facil"]) $(s).style.display = (s===id)?"block":"none"; };
+function setAccent(hex){ document.documentElement.style.setProperty("--accent", hex||"#d9c6a0"); }
+
+// ---------- home ----------
+function renderHome(){
+  const list = $("scnlist"); list.innerHTML = "";
+  for (const [id,s] of Object.entries(SCN)){
+    const b = document.createElement("button");
+    b.className = "scn"; b.style.setProperty("--sc", s.accent);
+    b.innerHTML = `<span class="kind">${s.kind}</span><h2>${s.title}</h2><p>${s.tagline}</p>
+      <span class="vs">You play <b>${s.player.split(",")[0]}</b> · facing <b>${s.ai}</b></span>`;
+    b.onclick = ()=>startRound(id);
+    list.appendChild(b);
+  }
+}
+
+// ---------- round ----------
+function startRound(id){
+  const s = SCN[id];
+  S = { id, openness:25, unlocked:[], history:[], played:{}, secs:s.minutes*60,
+        started:false, paused:false, over:false, agreement:false, timer:null };
+  setAccent(s.accent);
+  $("g-title").textContent = s.title;
+  $("g-who").textContent = `You are ${s.player}. ${s.playerBrief}`;
+  $("g-ai").textContent = s.ai;
+  $("g-faction").textContent = s.faction;
+  $("g-sigil").innerHTML = SIGILS[s.sigil];
+  $("pips").innerHTML = Array.from({length:s.unlockCount},()=>'<span class="pip"></span>').join("");
+  $("meterfill").style.width = "25%";
+  $("log").innerHTML = "";
+  $("input").value = ""; S.method = null;
+  $("playing").innerHTML = "Choose an approach card, then make your move.";
+  renderHand();
+  addMsg("note", s.setting);
+  addMsg("ch", s.opener, s.ai);
+  updateClock(); $("pausebtn").textContent = "Pause";
+  show("game");
+  $("input").focus();
+}
+
+function renderHand(){
+  const hand = $("hand"); hand.innerHTML = "";
+  for (const m of METHODS){
+    const b = document.createElement("button");
+    b.className = "card" + (S.method===m.id?" sel":"");
+    const uses = S.played[m.id]||0;
+    b.innerHTML = `<span class="ct"><span>${m.emoji}</span><span class="cn">${m.name}</span>${uses?`<span class="uses">×${uses}</span>`:""}</span><span class="cb">${m.blurb}</span>`;
+    b.onclick = ()=>{ S.method = (S.method===m.id)?null:m.id; renderHand(); syncSend(); };
+    hand.appendChild(b);
+  }
+  const m = METHODS.find(x=>x.id===S.method);
+  $("playing").innerHTML = m ? `Playing <b>${m.emoji} ${m.name}</b> — now apply it, in character.` : "Choose an approach card, then make your move.";
+}
+
+function syncSend(){
+  $("send").disabled = !(S && !S.over && S.method && $("input").value.trim());
+}
+$("input").addEventListener("input", syncSend);
+$("input").addEventListener("keydown",(e)=>{
+  if (e.key==="Enter" && !e.shiftKey){ e.preventDefault(); if(!$("send").disabled) sendMove(); }
+});
+$("send").onclick = ()=>sendMove();
+
+function addMsg(kind, text, tag){
+  const d = document.createElement("div");
+  d.className = "msg "+kind;
+  d.innerHTML = (tag?`<span class="tag">${tag}</span>`:"") + escapeHtml(text);
+  $("log").appendChild(d);
+  d.scrollIntoView({behavior:"smooth", block:"end"});
+  return d;
+}
+function escapeHtml(t){ const x=document.createElement("span"); x.textContent=t; return x.innerHTML; }
+
+async function sendMove(){
+  const text = $("input").value.trim();
+  if (!text || !S.method || S.over) return;
+  const m = METHODS.find(x=>x.id===S.method);
+  if (!S.started){ S.started = true; startTimer(); }
+  addMsg("pl", text, `${m.emoji} ${m.name}`);
+  S.history.push({role:"player", content:text, method:m.name});
+  S.played[m.id] = (S.played[m.id]||0)+1;
+  const playedMethod = S.method;
+  $("input").value=""; S.method=null; renderHand(); syncSend();
+  $("typing").style.display="block"; $("typing").textContent = SCN[S.id].ai + " is thinking…";
+
+  try{
+    const r = await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({scenario:S.id, history:S.history.slice(0,-1), message:text,
+        method:playedMethod, unlocked:S.unlocked, openness:S.openness})});
+    const data = await r.json();
+    $("typing").style.display="none";
+    if (!r.ok || data.error){
+      addMsg("note","The other side of the table went quiet ("+(data.error||r.status)+"). Try the move again.");
+      S.history.pop(); return;
+    }
+    addMsg("ch", data.reply, SCN[S.id].ai);
+    S.history.push({role:"character", content:data.reply});
+    S.openness = Math.max(0, Math.min(100, S.openness + (data.opennessDelta||0)));
+    $("meterfill").style.width = S.openness+"%";
+    for (const u of (data.newlyUnlocked||[])){
+      if (!S.unlocked.includes(u)){
+        S.unlocked.push(u);
+        addMsg("breakthrough","✦ Breakthrough — something you said landed.");
+      }
+    }
+    const pips = [...document.querySelectorAll("#pips .pip")];
+    pips.forEach((p,i)=>p.classList.toggle("on", i < S.unlocked.length));
+    if (data.agreement){ S.agreement = true; endRound("agreement"); }
+  }catch(e){
+    $("typing").style.display="none";
+    addMsg("note","Connection lost. Try the move again.");
+    S.history.pop();
+  }
+}
+
+// ---------- timer ----------
+function startTimer(){
+  S.timer = setInterval(()=>{
+    if (S.paused || S.over) return;
+    S.secs--; updateClock();
+    if (S.secs<=0) endRound("time");
+  },1000);
+}
+function updateClock(){
+  const c = $("clock");
+  const mm = Math.max(0,Math.floor(S.secs/60)), ss = Math.max(0,S.secs%60);
+  c.textContent = `${mm}:${String(ss).padStart(2,"0")}`;
+  c.classList.toggle("low", S.secs<=60);
+}
+$("pausebtn").onclick = ()=>{ if(!S||S.over) return; S.paused=!S.paused; $("pausebtn").textContent=S.paused?"Resume":"Pause"; };
+$("endbtn").onclick = ()=>endRound("ended");
+$("backbtn").onclick = ()=>{ if(S&&S.timer) clearInterval(S.timer); S=null; setAccent(null); show("home"); };
+
+// ---------- reveal ----------
+async function endRound(reason){
+  if (!S || S.over) return;
+  S.over = true; if (S.timer) clearInterval(S.timer);
+  const s = SCN[S.id];
+  const headline = reason==="agreement" ? "You got to an agreement."
+    : reason==="time" ? "Time ran out." : "Round ended.";
+  const sub = reason==="agreement"
+    ? `${s.ai} accepted. Now look at why it worked.`
+    : `${S.unlocked.length} of ${s.unlockCount} breakthroughs made. Now look at what was hidden.`;
+  $("r-outcome").innerHTML = headline + `<small>${sub}</small>`;
+  $("r-keyed").innerHTML = ""; $("r-unlocks").innerHTML = ""; $("r-debrief").innerHTML="";
+  $("r-solution").textContent = "Loading…";
+  $("r-played").innerHTML = Object.entries(S.played).map(([id,n])=>{
+    const m = METHODS.find(x=>x.id===Number(id));
+    return `<span class="chip">${m.emoji} ${m.name} ×${n}</span>`;
+  }).join("") || '<span style="color:var(--muted)">No moves made.</span>';
+  show("reveal");
+  try{
+    const r = await fetch("/api/reveal?scenario="+S.id);
+    const data = await r.json();
+    $("r-keyed").innerHTML = data.keyedMethods.map(k=>`<span class="chip">${k.emoji} ${k.name}</span>`).join("");
+    $("r-unlocks").innerHTML = data.unlocks.map(u=>{
+      const hit = S.unlocked.includes(u.id);
+      return `<li class="${hit?'hit':'miss'}"><span class="st">${hit?'Made':'Missed'}</span>${u.label}<small>${u.detail}</small></li>`;
+    }).join("");
+    $("r-solution").textContent = data.solution;
+    $("r-debrief").innerHTML = data.debrief.map(q=>`<li>${q}</li>`).join("");
+  }catch(e){
+    $("r-solution").textContent = "Could not load the reveal. The facilitator has the conditions.";
+  }
+}
+$("r-again").onclick = ()=>{ setAccent(null); show("home"); };
+$("r-replay").onclick = ()=>startRound(S.id);
+
+// ---------- facilitator ----------
+async function renderFacil(){
+  show("facil"); setAccent(null);
+  const body = $("facilbody"); body.innerHTML = '<p style="color:var(--muted)">Loading…</p>';
+  try{
+    const r = await fetch("/api/reveal?scenario=all");
+    const data = await r.json();
+    body.innerHTML = data.scenarios.map(s=>`
+      <div class="facil-scn" style="--accent:${SCN[s.id]?.accent||'#d9c6a0'}">
+        <h2>${s.title}</h2>
+        <div class="panelbox"><h3>Keyed methods</h3><div class="chips">${s.keyedMethods.map(k=>`<span class="chip">${k.emoji} ${k.name}</span>`).join("")}</div></div>
+        <div class="panelbox"><h3>Hidden breakthrough conditions</h3><ul>${s.unlocks.map(u=>`<li>${u.label}<small>${u.detail}</small></li>`).join("")}</ul></div>
+        <div class="panelbox"><h3>Design intent</h3><p style="margin:0;font-family:var(--voice)">${s.solution}</p></div>
+        <div class="panelbox"><h3>Debrief questions</h3><ul>${s.debrief.map(q=>`<li>${q}</li>`).join("")}</ul></div>
+      </div>`).join("");
+  }catch(e){ body.innerHTML = "<p>Could not load.</p>"; }
+}
+$("facilback").onclick = ()=>{ history.replaceState(null,"",location.pathname); show("home"); };
+
+// ---------- boot ----------
+function route(){
+  if (location.hash === "#facilitator") renderFacil();
+  else if (!S) show("home");
+}
+window.addEventListener("hashchange", route);
+renderHome();
+route();
+</script>
+</body>
+</html>
