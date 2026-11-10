@@ -88,6 +88,8 @@ button{font-family:var(--display);cursor:pointer}
 .bhead .nm{font-size:17px;font-weight:700}
 .bhead .fc{font-size:12.5px;color:var(--muted)}
 .bcard p{margin:0;font-family:var(--voice);font-size:14.5px}
+.tools{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;border-left:2px solid var(--accent);padding:6px 0 6px 14px;font-size:13.5px;color:var(--muted)}
+.tools .tl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);flex:none}
 .stakes{margin-top:14px;background:color-mix(in srgb,var(--accent) 9%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:10px;padding:14px 16px}
 .stakes h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
 .stakes p{margin:0;font-family:var(--voice);font-size:15px}
@@ -211,6 +213,7 @@ textarea:focus{outline:none;border-color:var(--accent)}
 <section id="brief">
   <div class="hero" id="b-hero"></div>
   <div class="setting" id="b-setting"></div>
+  <div class="tools"><span class="tl">Tools of this world</span><span id="b-tech"></span></div>
   <div class="bgrid">
     <div class="bcard you">
       <span class="role">You are</span>
@@ -339,6 +342,7 @@ const SCN = {
     ],
     youBrief:"You grew up in a politically astute family, and your father is watching how you lead. You want your legacy to be bringing science and technology to the people of Eldoria, and the ancient bark is the key to it. You value practical solutions, you tend to prioritise short-term gains, and your council is pressing you to show progress. You believe the land belongs to the humans, and you have never really understood the elves' spiritual connection to the forest. It has cost you in every talk so far.",
     aiBrief:"Eleniel sees the forest as a sacred, living entity, and knows its ecology and history better than anyone alive. He does not recognise your kingdom's right to the land, treaty or no treaty. He is said to distrust the short-sighted goals of humans and to fear losing his homeland to your expansion. The elven kingdom has sent him with firm instructions. How firm, you do not know.",
+    tech:"A treaty archive kept under both kingdoms' seals · boundary stones that mark old agreements · scribes in both courts · rangers who know every path",
     stakes:"No bark, and your science programme and your standing with the council stall. Push too hard, and a treaty that has held for generations breaks on your watch.",
     opener:"You summoned me, Lord Aric, so speak plainly. My people believe your council sees only timber and bark where we see a living ancestor. The treaty says we live under your protection, but the forest was ours before your kingdom had a name. Tell me why this conversation will be different from the last three."
   },
@@ -355,6 +359,7 @@ const SCN = {
     ],
     youBrief:"You took over Phoenix from the former university Chancellor, who was more ruthless than you. Your faction has survived by negotiating with communities, but it has also resorted to violence and trickery when cornered, and you carry deep guilt about those times. You want to work with Tiger Claw and their mechanic, and you hope the generator could be the start of a new society. You also know exactly why they do not trust you.",
     aiBrief:"Raven leads Tiger Claw: charismatic, hard, shaped by loss. Her people all lived in the same town before the collapse, and they are loyal to her completely. Early on, her partner was killed by Phoenix. Word is that half her camp wants to take your scientist by force rather than talk. You do not know how she weighs those voices.",
+    tech:"Salvaged two-way radios on a shared frequency nobody uses · a generator shed that can take two locks · scouts who watch the roads",
     stakes:"Three weeks until the battery is dead, and Dynamite is closing in on both of you. If this meeting fails, the next contact between your factions will not be a conversation.",
     opener:"You have got nerve coming here, Phoenix. That generator sits on our ground and our mechanic found it. And the last time your people and mine stood this close, I buried my partner. Half my camp wants me to take your scientist by force and be done with it. You have one minute to tell me why I should not."
   },
@@ -371,6 +376,7 @@ const SCN = {
     ],
     youBrief:"You are the kingdom's most renowned knight, negotiating for the common folk, the knights and the army. You were raised where martial prowess was prized, and you value honour and strength. You are sceptical of ways of establishing legitimacy that do not involve proving one's worth, and mysticism has always struck you as theatre. But you have your orders: come back with a path to an heir the whole kingdom can accept.",
     aiBrief:"Mira grew up in a secluded temple, learning ancient lore and the subtle art of diplomacy. She believes in destiny and in mystical legitimacy, and she has spent a lifetime at odds with those who only value strength. She is no zealot, they say, but she will not accept a tournament, and the mystics will treat any victor of one as a usurper.",
+    tech:"Heralds and message-birds that reach every village · the temple's book of signs · the army's muster rolls · the royal rolls in which law is written",
     stakes:"Whatever you two agree, both the army and the mystics must be able to call it rightful. Anything less is a coronation with a war attached.",
     opener:"Sir Gareth. The mystics have read the same sky for three hundred years, and the sky has not yet spoken. Your soldiers sharpen swords for a tournament my people will never accept, and my people wait for a sign your soldiers will never believe. If we leave this room with nothing, we leave it with a war. So: what do you propose?"
   },
@@ -447,7 +453,8 @@ function renderBrief(id){
   $("b-ainame").textContent = s.ai;
   $("b-aifc").textContent = s.faction;
   $("b-aibrief").textContent = s.aiBrief;
-  $("b-stakes").textContent = s.stakes;
+  $("b-tech").textContent = s.tech;
+  $("b-stakes").textContent = s.stakes + " And know this: a handshake will not be enough. Whatever you agree must live in a mechanism both sides can see working.";
 }
 $("b-start").onclick = ()=>{ if (BRIEFED) startRound(BRIEFED); };
 $("b-back").onclick = ()=>{ BRIEFED=null; setAccent(null); show("home"); };
