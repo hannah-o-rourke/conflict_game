@@ -1,1 +1,15 @@
-{ "scenes": {}, "portraits": {} }
+{
+  "scenes": {
+    "eldoria": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/scene-eldoria.png",
+    "generator": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/scene-generator.png",
+    "mythlandia": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/scene-mythlandia.png"
+  },
+  "portraits": {
+    "eleniel": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/eleniel.png",
+    "aric": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/aric.png",
+    "raven": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/raven.png",
+    "solara": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/solara.png",
+    "gareth": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/gareth.png",
+    "mira": "https://imhjyh3oqxgvd9ob.public.blob.vercel-storage.com/conflict-game/mira.png"
+  }
+}

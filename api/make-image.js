@@ -8,7 +8,7 @@ const STYLE =
 
 const PROMPTS = {
   "scene-eldoria": `Wide establishing shot: a human noble and an elven ranger negotiating across a stone table at the edge of a vast ancient enchanted forest, colossal trees with faintly glowing bark, morning mist, tense diplomatic atmosphere. ${STYLE}`,
-  "scene-generator": `Wide establishing shot: two rival survivor leaders facing each other beside a huge rusted industrial generator in a post-apocalyptic camp at dusk, armed followers watching from the shadows, storm light on the horizon. ${STYLE}`,
+  "scene-generator": `Wide establishing shot: two rival survivor leaders in a tense standoff on opposite sides of a huge rusted industrial generator in a post-apocalyptic settlement at dusk, their followers watching warily from the shadows, storm light on the horizon. ${STYLE}`,
   "scene-mythlandia": `Wide establishing shot: an empty jewelled crown resting on a table between a knight and a robed sage in a torchlit medieval great hall, rival banners hanging, motes of fairy light drifting in a shaft of window light. ${STYLE}`,
   eleniel: `Character portrait, head and shoulders, facing the viewer: an elven ranger with long hair woven with leaves, forest-green cloak, wary watchful expression, dark forest background. ${STYLE}`,
   aric: `Character portrait, head and shoulders, facing the viewer: a young ambitious human noble lord in a fine dark coat with subtle gold trim, calculating but earnest expression, castle study background. ${STYLE}`,
