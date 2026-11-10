@@ -15,7 +15,7 @@ const PROMPTS = {
   raven: `Character portrait, head and shoulders, facing the viewer: a hardened post-apocalyptic survivor leader, a woman with a scar and a fur-lined patched jacket, fierce guarded eyes, camp firelight background. ${STYLE}`,
   solara: `Character portrait, head and shoulders, facing the viewer: a thoughtful post-apocalyptic faction leader, a woman in a patched scholar's coat over old university robes, weary but hopeful expression, ruined library background. ${STYLE}`,
   gareth: `Character portrait, head and shoulders, facing the viewer: a broad-shouldered knight with a short beard, worn plate armour, stern honest face, tournament ground background. ${STYLE}`,
-  mira: `Character portrait, head and shoulders, facing the viewer: a sage with silver-streaked hair and midnight-blue robes marked with star sigils, serene piercing gaze, temple candlelight background. ${STYLE}`,
+  mira: `Character portrait, head and shoulders, facing the viewer: a wise woman sage with long silver-streaked hair and midnight-blue robes marked with star sigils, serene piercing gaze, temple candlelight background. ${STYLE}`,
 };
 
 export default async function handler(req, res) {
